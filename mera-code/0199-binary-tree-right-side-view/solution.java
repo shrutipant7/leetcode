@@ -15,16 +15,21 @@
  */
 class Solution {
     public List<Integer> rightSideView(TreeNode root) {
-    List<Integer> list = new ArrayList<>();
-    if(root != null) {
-      levelOrder(root, list, 0);
+        List<TreeNode> list = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
+        if(root == null) return res;
+        printUtil(root, list, 0);
+        for(TreeNode node : list) {
+            res.add(node.val);
+        }
+        return res;
     }
-    return list;
-    }
-    static void levelOrder(TreeNode root, List<Integer> list, int level) {
+    
+    static void printUtil(TreeNode root, List<TreeNode> list, int level) {
         if(root == null) return;
-        if(level == list.size()) list.add(root.val);
-        levelOrder(root.right, list, level+1);
-        levelOrder(root.left, list, level+1);
+        if(list.size() == level) list.add(level, root);
+        else if (list.get(level) == null) list.add(level, root);
+        printUtil(root.right, list, level+1);
+        printUtil(root.left, list, level+1);
     }
 }
