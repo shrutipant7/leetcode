@@ -9,15 +9,27 @@
  * }
  */
 class Solution {
-    ListNode newHead = null;
     public ListNode reverseList(ListNode head) {
-        if(head == null || head.next == null) {
-            return head;
-        }
-        ListNode last = reverseList(head.next); //last=5, head=4
-        newHead = head.next;
-        head.next=null;
-        newHead.next=head;
-        return last;
+        if(head == null || head.next == null) return head;
+        // ------- Iterative -----------
+        // ListNode prev = null;
+        // ListNode temp = null;
+        // while(head != null) {
+        //     temp = head.next;
+        //     head.next = prev;
+        //     prev = head;
+        //     head = temp;
+        // }
+        // return prev;
+        
+        // ----------- Recursive ---------
+        return recursiveFunction(head, null);        
+    }
+    
+    public ListNode recursiveFunction(ListNode head, ListNode prev) {
+        if(head == null) return prev;
+        ListNode temp = head.next;
+        head.next = prev;
+        return recursiveFunction(temp, head);
     }
 }
