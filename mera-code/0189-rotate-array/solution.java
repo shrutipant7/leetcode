@@ -1,20 +1,48 @@
+// Intuitive solution:
+// class Solution {
+//     public void rotate(int[] nums, int k) {
+//         int n = nums.length;
+//         if (n==1 || k ==0) return;
+//         int temp[] = new int[n];
+//         int t = 0;
+//         int mod = k%n;
+//         for (int i= n-mod; i<n; i++) {
+//             temp[t] = nums[i];
+//             t++;
+//         }
+//         for (int i=0; i<n-mod; i++) {
+//             temp[t] = nums[i];
+//             t++;
+//         }
+//         for (int i=0; i<n; i++) {
+//             nums[i] = temp[i];
+//         }
+//     }
+// }
+
+
+//Optimized solution:
 class Solution {
     public void rotate(int[] nums, int k) {
-        int len = nums.length; //7
-        int shiftIndex = k%len; //2
-        reverse(nums, 0, len-1);
-        //System.out.print(Arrays.toString(nums));
-        reverse(nums, 0, shiftIndex-1);
-        //System.out.print(Arrays.toString(nums));
-        reverse(nums, shiftIndex, len-1);
+        int n = nums.length;
+        if (n==1 || k ==0) return;
+        int temp[] = new int[n];
+        int t = 0;
+        int mod = k%n;
+        for (int i=0, j=n-mod-1; i<j; i++, j--) {
+            swap(nums, i, j);
+        }
+        for (int i=n-mod, j=n-1; i<j; i++, j--) {
+            swap(nums, i, j);
+        }
+        for (int i=0, j=n-1; i<j; i++, j--) {
+            swap(nums, i, j);
+        }
     }
 
-    public void reverse(int[] nums, int init, int fin) {
-        int temp = 0;
-        for (int i=init, j=fin; i<j; i++, j--) {
-            temp = nums[i];
-            nums[i] = nums[j];
-            nums[j] = temp;
-        }
+    public void swap (int[] nums, int n1, int n2) {
+        int temp = nums[n1];
+        nums[n1] = nums[n2];
+        nums[n2] = temp;
     }
 }
