@@ -1,8 +1,10 @@
 class Solution {
     public int missingNumber(int[] nums) {
-        int len = nums.length;
-        int sumFound = IntStream.of(nums).reduce(0, Integer::sum);
-        int sumExpected = (len)*(len+1)/2;
-        return sumExpected-sumFound ;
+        int xorArr = 0, xorNum = 0;
+        for(int i=0; i<nums.length; i++) {
+            xorArr ^= nums[i];
+            xorNum ^= i+1;
+        }
+        return xorArr^xorNum;
     }
 }
