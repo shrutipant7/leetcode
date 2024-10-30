@@ -1,16 +1,22 @@
 class Solution {
     public boolean isValid(String s) {
-        Stack<Character> stack = new Stack<Character>();
-        for(int i=0; i < s.length(); i++) {
-            if(!stack.isEmpty() && isMatching(stack.peek(), s.charAt(i))) stack.pop();
-            else stack.push(s.charAt(i));
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (!stack.isEmpty() && isMatching(stack.peek(), c)) {
+                stack.pop();
+            } else {
+                stack.push(c);
+            }
         }
         return stack.isEmpty();
     }
-    static boolean isMatching(char ch1, char ch2) {
-        if (ch1 == '(' && ch2 == ')') return true;
-        else if (ch1 == '[' && ch2 == ']') return true;
-        else if (ch1 == '{' && ch2 == '}') return true;
-        else return false;
+
+    boolean isMatching(char c1, char c2) {
+        if((c1 == '(' && c2 == ')') ||
+        (c1 == '{' && c2 == '}') ||
+        (c1 == '[' && c2 == ']')) {
+            return true;
+        }
+        return false;
     }
 }
