@@ -1,33 +1,30 @@
 class Solution {
     public List<String> letterCombinations(String digits) {
-        List<String> result = new ArrayList<>();
-        if(digits.length() == 0) return result;
-        
-        List<String> telephone = new ArrayList<>(
-            Arrays.asList("abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"));
-        Queue<String> q = new LinkedList<>();
-        
-        for(char digit : digits.toCharArray()) {
-            char[] digitChar = telephone.get(digit - '2').toCharArray();
-            if(q.isEmpty()) {
-                for(char ch : digitChar) {
-                    q.offer(String.valueOf(ch));
-                }
-            } //Push [a, b, c] to queue.
-            else {
-                int queueSize = q.size();
-                while(queueSize > 0) {
-                    String top = q.poll();
-                    for(char ch : digitChar) {
-                        q.offer(top + String.valueOf(ch));
-                    }
-                    queueSize--;
-                }
-            }
-        }    
-        while(!q.isEmpty()){
-            result.add(q.poll());
+        List<String> res = new ArrayList<>();
+        Map<Character, String> keypad = new HashMap<>();
+        keypad.put('2', "abc");
+        keypad.put('3', "def");
+        keypad.put('4', "ghi");
+        keypad.put('5', "jkl");
+        keypad.put('6', "mno");
+        keypad.put('7', "pqrs");
+        keypad.put('8', "tuv");
+        keypad.put('9', "wxyz");
+        recFun(digits, keypad, 0, new StringBuilder(), res);
+        return res;
+    }
+
+    public void recFun(
+            String digits, Map<Character, String> keypad, int ind, StringBuilder sb, List<String> res) {
+        if (ind == digits.length()) {
+            res.add(sb.toString());
+            return;
         }
-        return result;
+        String letters = keypad.get(digits.charAt(ind));
+        for (char ch : letters.toCharArray()) {
+            sb.append(ch);
+            recFun(digits, keypad, ind + 1, sb, res);
+            sb.deleteCharAt(sb.length() - 1);
+        }
     }
 }
