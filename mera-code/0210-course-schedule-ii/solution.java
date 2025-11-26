@@ -1,43 +1,48 @@
 class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
+        int[] indegree = new int[numCourses];
+        Queue<Integer> q = new ArrayDeque<>();
         List<Integer> tempAns = new ArrayList<>();
         List<List<Integer>> adj = new ArrayList<>();
-        int n = numCourses;
-        int[] indegree = new int[n];
-         while(n > 0) {
+        for (int i = 0; i < numCourses; i++) {
             adj.add(new ArrayList<>());
-            n--;
         }
-        for(int i=0; i<prerequisites.length; i++) {
-            int key = prerequisites[i][1];
-            int value = prerequisites[i][0];
-            adj.get(key).add(value);
+
+        for (int i = 0; i < prerequisites.length; i++) {
+            indegree[prerequisites[i][0]]++;
+            adj.get(prerequisites[i][1]).add(prerequisites[i][0]);
         }
-        for(int i=0; i< indegree.length; i++) {
-            indegree[i] = 0;
+
+        for (int j = 0; j < numCourses; j++) {
+            if (indegree[j] == 0)
+                q.add(j);
         }
-        for(List<Integer> list : adj) {
-            for(Integer item : list) {
-                indegree[item]+=1;
-            }
+
+        topoSort(q, adj, indegree, tempAns);
+
+        if (tempAns.size() != numCourses)
+            return new int[0];
+
+        int[] topoAns = new int[numCourses];
+        int k = 0;
+        while (k < numCourses) {
+            topoAns[k] = tempAns.get(k);
+            k++;
         }
-        bfs(adj, tempAns, indegree);
-        return tempAns.size() !=  numCourses ? new int[0] : 
-        tempAns.stream().mapToInt(Integer::intValue).toArray();
+        return topoAns;
     }
-    
-    static void bfs(List<List<Integer>> adj, List<Integer> tempAns, int[] indegree) {
-        Queue<Integer> q = new LinkedList<>();
-        for(int i=0; i< indegree.length; i++) {
-            if(indegree[i] == 0) q.offer(i);
-        }
-        while(!q.isEmpty()) {
-            Integer top = q.poll();
-            tempAns.add(top);
-            for(Integer neighbour : adj.get(top)) {
-                indegree[neighbour]-=1;
-                if(indegree[neighbour] == 0) q.offer(neighbour);
+
+    public void topoSort(
+            Queue<Integer> q, List<List<Integer>> adj, int[] indegree, List<Integer> tempAns) {
+        while (!q.isEmpty()) {
+            int front = q.poll();
+            tempAns.add(front);
+            for (int neighbor : adj.get(front)) {
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0)
+                    q.add(neighbor);
             }
         }
     }
 }
+
