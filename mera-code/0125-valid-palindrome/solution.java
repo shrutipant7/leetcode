@@ -1,29 +1,29 @@
 class Solution {
     public boolean isPalindrome(String s) {
-        if (s.isEmpty()) {
-        	return true;
-        }
-        int start = 0;
-        int end = s.length()-1;
-        char startCh;
-        char endCh;
-        while(start <= end) {   
-            startCh = s.charAt(start);
-            endCh = s.charAt(end);
-                if(!Character.isLetterOrDigit(startCh)) {
-                    start++;
-                }
-                else if(!Character.isLetterOrDigit(endCh)) {
-                    end--;
-                }                
-                else {
-                    if(Character.toLowerCase(startCh) != Character.toLowerCase(endCh)) {
-                     return false;
-                    } 
-                    start++;
-                    end--;
-                }
+        int i = 0, j = s.length() - 1;
+        String newStr = s.toLowerCase();
+        while (i < j) {
+            char chLeft = newStr.charAt(i);
+            if (!alphaNum(chLeft)) {
+                i++;
+                continue;
+            }
+            char chRight = newStr.charAt(j);
+            if (!alphaNum(chRight)) {
+                j--;
+                continue;
+            }
+            if (chLeft != chRight) {
+                return false;
+            }
+            i++;
+            j--;
         }
         return true;
+    }
+
+    public boolean alphaNum(char c) {
+        return (c >= 'a' && c <= 'z' ||
+                c >= '0' && c <= '9');
     }
 }
