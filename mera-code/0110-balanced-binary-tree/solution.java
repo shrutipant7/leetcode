@@ -14,33 +14,19 @@
  * }
  */
 class Solution {
-//     public boolean isBalanced(TreeNode root) {
-//         if(root == null) return true;
-//         Queue<TreeNode> queue = new ArrayDeque<>();
-//         queue.offer(root);
-//         while(!queue.isEmpty()) {
-//             TreeNode top = queue.remove();
-//             if(Math.abs(height(top.left)-height(top.right)) > 1) return false;
-//             if(top.left != null) queue.offer(top.left);
-//             if(top.right != null) queue.offer(top.right);
-//         }
-//         return true;
-//     }
-    
-//     static int height(TreeNode root) {
-//         if(root == null) return 0;
-//         return Math.max(height(root.left), height(root.right)) + 1;
-//     }
-    
-     public boolean isBalanced(TreeNode root) {
-        if(root == null) return true;
-        if(Math.abs(height(root.left)-height(root.right)) <= 1 && isBalanced(root.left)
-          && isBalanced(root.right)) return true;
-        return false;
+    public boolean isBalanced(TreeNode root) {
+        if (root == null)
+            return true;
+        return height(root) != -1;
     }
-    
-    static int height(TreeNode root) {
-        if(root == null) return 0;
-        return Math.max(height(root.left), height(root.right)) + 1;
+
+    public int height(TreeNode root) {
+        if (root == null)
+            return 0;
+        int lft = height(root.left);
+        int rgt = height(root.right);
+        if (lft == -1 || rgt == -1 || Math.abs(lft - rgt) > 1)
+            return -1;
+        return 1 + Math.max(lft, rgt);
     }
 }
