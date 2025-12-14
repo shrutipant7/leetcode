@@ -15,16 +15,14 @@
  */
 class Solution {
     public TreeNode invertTree(TreeNode root) {
-        if(root == null) {
+        if (root == null)
             return null;
-        }  
-        //"Replace" child node values directly in root.left and root.right
-        //Doing TreeNode left = right etc won't work. 
-        TreeNode left = invertTree(root.left);  
+        TreeNode left = invertTree(root.left);
         TreeNode right = invertTree(root.right);
-        TreeNode temp = left;
-        root.left = right;
-        root.right = temp;
+        if (left != null || right != null) {
+            root.left = right;
+            root.right = left;
+        }
         return root;
     }
 }
