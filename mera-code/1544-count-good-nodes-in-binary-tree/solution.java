@@ -13,20 +13,33 @@
  *     }
  * }
  */
-class Solution {
-    int res = 0;
-    public int goodNodes(TreeNode root) {
-        dfs(root, root.val);
-        return res;
+class Pair {
+    TreeNode node;
+    int parent;
+
+    public Pair(TreeNode node, int parent) {
+        this.node = node;
+        this.parent = parent;
     }
-    
-    public void dfs(TreeNode root, int max) {
-        if(root == null) return;
-        if(root.val >= max) {
-            max = Math.max(max, root.val);
-            res++;
+}
+
+class Solution {
+    public int goodNodes(TreeNode root) {
+        int ans = 0;
+        if (root == null)
+            return ans;
+
+        Queue<Pair> q = new ArrayDeque<>();
+        q.add(new Pair(root, root.val));
+        while (!q.isEmpty()) {
+            Pair top = q.poll();
+            if (top.node.val >= top.parent)
+                ans++;
+            if (top.node.left != null)
+                q.add(new Pair(top.node.left, Math.max(top.node.val, top.parent)));
+            if (top.node.right != null)
+                q.add(new Pair(top.node.right, Math.max(top.node.val, top.parent)));
         }
-        dfs(root.left, max);
-        dfs(root.right, max);
+        return ans;
     }
 }
