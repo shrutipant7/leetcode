@@ -10,26 +10,16 @@
  */
 class Solution {
     public ListNode reverseList(ListNode head) {
-        if(head == null || head.next == null) return head;
-        // ------- Iterative -----------
-        // ListNode prev = null;
-        // ListNode temp = null;
-        // while(head != null) {
-        //     temp = head.next;
-        //     head.next = prev;
-        //     prev = head;
-        //     head = temp;
-        // }
-        // return prev;
-        
-        // ----------- Recursive ---------
-        return recursiveFunction(head, null);        
-    }
-    
-    public ListNode recursiveFunction(ListNode head, ListNode prev) {
-        if(head == null) return prev;
-        ListNode temp = head.next;
-        head.next = prev;
-        return recursiveFunction(temp, head);
+        if (head == null || head.next == null) return head;
+        ListNode tail = head;
+        ListNode l = head, r = head.next;
+        while (r != null) {
+            ListNode temp = r.next;
+            r.next = l;
+            l = r;
+            r = temp;
+        }
+        tail.next = null;
+        return l;
     }
 }
