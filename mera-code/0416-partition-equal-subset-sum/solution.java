@@ -1,23 +1,30 @@
 class Solution {
     public boolean canPartition(int[] nums) {
-        int sum = 0;
-        for(int i=0; i<nums.length; i++) {
-            sum+=nums[i];
+        int sum = 0, len = nums.length;
+        for (int i : nums)
+            sum += i;
+        if (sum % 2 != 0)
+            return false;
+        sum /= 2;
+        boolean[][] dp = new boolean[len + 1][sum + 1];
+        for (int i = 0; i <= len; i++) {
+            for (int j = 0; j <= sum; j++) {
+                if (i == 0)
+                    dp[i][j] = false;
+                if (j == 0)
+                    dp[i][j] = true;
+            }
         }
-        if(sum%2 != 0) return false;
-        boolean[][] dp = new boolean[nums.length+1][(sum/2)+1];
-        for(int i = 0; i<nums.length; i++){
-            for(int j = 0; j<=sum/2; j++){
-                if( j==0 ) dp[i][j] = true;
-                else if(i == 0) dp[i][j] = false;
-            } 
+        for (int i = 1; i <= len; i++) {
+            for (int j = 1; j <= sum; j++) {
+                boolean taken = false;
+                boolean notTaken = dp[i - 1][j];
+                if (nums[i - 1] <= j) {
+                    taken = dp[i - 1][j - nums[i - 1]];
+                }
+                dp[i][j] = taken || notTaken;
+            }
         }
-        for(int i = 1; i<=nums.length; i++){
-            for(int j = 1; j<=sum/2; j++){
-                if(nums[i-1] > j) dp[i][j] = dp[i-1][j];
-                else dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]];
-            } 
-        }
-        return dp[nums.length][sum/2];
+        return dp[len][sum];
     }
 }
