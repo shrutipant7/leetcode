@@ -9,9 +9,9 @@ class Solution {
         int maxc = n-1;
         while(res.size() < m*n){ //Condition to know when to stop i.e., when all elements have been traversed.
             for(int i=minc; i<=maxc && res.size() < m*n; i++ ) {//res.size() < m*n prevent printing elements again when in innermost part of the matrix.
-                res.add(matrix[minc][i]);
-            }
-            minr++; //Increment min row so that the corner element won't be included in next loop.
+                res.add(matrix[minr][i]);
+            } 
+            minr++;
             for(int i=minr; i<=maxr && res.size() < m*n; i++ ) {
                 res.add(matrix[i][maxc]);
             }
