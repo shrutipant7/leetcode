@@ -1,20 +1,32 @@
 class Solution {
+    Map<Character, Integer> map = new HashMap<>();
+
     public int characterReplacement(String s, int k) {
-        int startIndex = 0;
-        int res = 0;
-        int maxRepeatLetterCount = 0;
-        Map<Character, Integer> map = new HashMap<>();
-        for(int endIndex = 0; endIndex < s.length(); endIndex++) {
-            char endChar = s.charAt(endIndex);
-            map.put(endChar, map.getOrDefault(endChar, 0) + 1);
-            maxRepeatLetterCount = Math.max(maxRepeatLetterCount, map.get(endChar));
-            if(endIndex - startIndex + 1 - maxRepeatLetterCount > k) {     
-                char startChar = s.charAt(startIndex);
-                map.put(startChar, map.get(startChar)-1);
-                startIndex++;
+        int st = 0, maxLen = 0;
+        for (int end = 0; end < s.length(); end++) {
+            char chEnd = s.charAt(end);
+            map.put(chEnd, map.getOrDefault(chEnd, 0) + 1);
+            while (st < s.length() && (end - st + 1) - map.get(findMajorityChar()) > k) {
+                char chSt = s.charAt(st);
+                map.put(chSt, map.get(chSt) - 1);
+                if (map.get(chSt) <= 0)
+                    map.remove(chSt);
+                st++;
             }
-            res = Math.max(res, endIndex - startIndex + 1);
+            maxLen = Math.max(maxLen, end - st + 1);
         }
-        return res;
+        return maxLen;
+    }
+
+    public char findMajorityChar() {
+        int maxCnt = 0;
+        char maxChar = 'A';
+        for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+            if (entry.getValue() > maxCnt) {
+                maxCnt = entry.getValue();
+                maxChar = entry.getKey();
+            }
+        }
+        return maxChar;
     }
 }
