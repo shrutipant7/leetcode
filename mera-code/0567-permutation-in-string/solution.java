@@ -1,34 +1,48 @@
 class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        int startIndex = 0;
-        int len1 = s1.length();
-        int len2 = s2.length();
-        if (len1 > len2) return false;
-        int[] list1 = new int[26];
-        int[] list2 = new int[26];
-        
-        //Initialise list1 and list2 to len1 or size of window
-        for(int i=0; i < len1; i++) {
-            list1[s1.charAt(i) - 'a']+=1;
-            list2[s2.charAt(i) - 'a']+=1;
+        int[] s1Cnt = new int[26];
+        int[] s2Cnt = new int[26];
+        int st = 0, len1 = s1.length(), len2 = s2.length(), matchedChar = 0;
+        if (len1 > len2)
+            return false;
+
+        for (char c : s1.toCharArray()) {
+            s1Cnt[c - 'a']++;
         }
-        
-        for(int endIndex = len1; endIndex < len2; endIndex++) {
-            if(matchFunction(list1, list2)) return true;
-            char newCh = s2.charAt(endIndex);
-            char oldCh = s2.charAt(startIndex);
-            list2[newCh - 'a']+=1;
-            list2[oldCh - 'a']-=1;
-            startIndex++;
+        for (int i = 0; i < len1; i++) {
+            s2Cnt[s2.charAt(i) - 'a']++;
         }
-        return matchFunction(list1, list2);
+        matchedChar = countMatchingChar(s1Cnt, s2Cnt);
+        if (matchedChar == 26)
+            return true;
+
+        for (int end = len1; end < len2; end++) {
+            char chEnd = s2.charAt(end), chSt = s2.charAt(st);
+            if (s1Cnt[chEnd - 'a'] == s2Cnt[chEnd - 'a'])
+                matchedChar--;
+            s2Cnt[chEnd - 'a']++;
+            if (s1Cnt[chEnd - 'a'] == s2Cnt[chEnd - 'a'])
+                matchedChar++;
+
+            if (s1Cnt[chSt - 'a'] == s2Cnt[chSt - 'a'])
+                matchedChar--;
+            s2Cnt[chSt - 'a']--;
+            if (s1Cnt[chSt - 'a'] == s2Cnt[chSt - 'a'])
+                matchedChar++;
+
+            if (matchedChar == 26)
+                return true;
+            st++;
+        }
+        return false;
     }
-    
-    //Check if list1 and list2 have same character frequency
-    public boolean matchFunction(int[] list1, int[] list2) {
-        for(int i=0; i<26; i++) {
-            if(list1[i] != list2[i]) return false;
+
+    public int countMatchingChar(int[] s1Cnt, int[] s2Cnt) {
+        int ans = 0;
+        for (int i = 0; i < 26; i++) {
+            if (s1Cnt[i] == s2Cnt[i])
+                ans++;
         }
-        return true;
+        return ans;
     }
 }
