@@ -1,23 +1,22 @@
 class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
-        int n = nums.length;
-        int[] res = new int[n-k+1];
-        Deque<Integer> queue = new ArrayDeque<>(); //Storing indices.
-        for(int i=0; i<k; i++) {
-            while(!queue.isEmpty() && nums[queue.peekLast()] <= nums[i])
-                queue.removeLast();
-            queue.addLast(i);
+        int len = nums.length, it = 0;
+        if (len == 1 || k == 1)
+            return nums;
+
+        int[] ans = new int[len - k + 1];
+        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> b[0] - a[0]);
+        for (int i = 0; i < k; i++)
+            pq.add(new int[] { nums[i], i });
+
+        ans[it++] = pq.peek()[0];
+
+        for (int end = k; end < len; end++) {
+            while (pq.peek()[1] < end - k + 1)
+                pq.poll();
+            pq.add(new int[] { nums[end], end });
+            ans[it++] = pq.peek()[0];
         }
-        
-        for(int i=k; i<n; i++) {
-            res[i-k] = nums[queue.peekFirst()];            
-            while(!queue.isEmpty() && queue.peekFirst() <= i-k)
-                queue.removeFirst();
-            while(!queue.isEmpty() && nums[queue.peekLast()] <= nums[i])
-                queue.removeLast();
-            queue.addLast(i);
-        }
-            res[n-k] = nums[queue.peekFirst()];  
-    return res;
+        return ans;
     }
 }
