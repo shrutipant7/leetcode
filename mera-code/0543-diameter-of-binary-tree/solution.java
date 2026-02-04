@@ -13,20 +13,19 @@
  *     }
  * }
  */
-class Solution { 
-    int result = Integer.MIN_VALUE;
+class Solution {
     public int diameterOfBinaryTree(TreeNode root) {
-        if (root == null) return 0;
-        height(root);
-        return result-1;
+        int[] res = new int[] { 0 };
+        dfs(root, res);
+        return res[0];
     }
-    public int height(TreeNode root) {   
-        if (root == null) return 0;
-        int l = height(root.left);
-        int r = height(root.right);
-        int ht = Math.max(l, r) + 1; // Not including root in diameter
-        int ans = 1+l+r; // Including root in diameter
-        result = Math.max(result, ans);
-        return ht;
+
+    public int dfs(TreeNode root, int[] res) {
+        if (root == null)
+            return 0;
+        int leftMax = dfs(root.left, res);
+        int rightMax = dfs(root.right, res);
+        res[0] = Math.max(res[0], leftMax + rightMax);
+        return Math.max(leftMax, rightMax) + 1;
     }
 }
