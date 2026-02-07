@@ -1,20 +1,20 @@
 class Solution {
     public int totalFruit(int[] fruits) {
-        int result = 0;
-        Map<Integer, Integer> map = new HashMap<>();
-        int startIndex = 0;
-        for(int endIndex = 0; endIndex < fruits.length; endIndex++) {
-            map.put(fruits[endIndex], map.getOrDefault(fruits[endIndex], 0) + 1);
-            while(map.size() > 2) {
-                int startInt = fruits[startIndex];
-                map.put(startInt, map.get(startInt) - 1);
-                if(map.get(startInt) == 0) {
-                    map.remove(startInt);
-                }
-                startIndex++;
+        int end = 0, st = 0, len = fruits.length, maxVal = 0;
+        Map<Integer, Integer> fruitMap = new HashMap<>();
+        while (end < len) {
+            fruitMap.put(fruits[end], fruitMap.getOrDefault(fruits[end], 0) + 1);
+            while (fruitMap.size() > 2) {
+                if (fruitMap.get(fruits[st]) == 1)
+                    fruitMap.remove(fruits[st]);
+                else
+                    fruitMap.put(fruits[st], fruitMap.get(fruits[st]) - 1);
+                st++;
             }
-            result = Math.max(result, endIndex-startIndex+1);
+
+            maxVal = Math.max(maxVal, end - st + 1);
+            end++;
         }
-        return result;
+        return maxVal;
     }
 }
