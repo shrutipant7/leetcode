@@ -1,20 +1,29 @@
 class Solution {
     public int[][] insert(int[][] intervals, int[] newInterval) {
-        if(intervals.length == 0) return new int[][]{newInterval};
-        List<int[]> result = new ArrayList<>();
-        int i=0;
-        while(i < intervals.length && newInterval[0] > intervals[i][1]) {
-            result.add(intervals[i++]);
+        if (intervals.length == 0)
+            return new int[][] { newInterval };
+
+        List<int[]> temp = new ArrayList<>();
+        for (int[] it : intervals) {
+            if (newInterval == null || newInterval[0] > it[1]) {
+                temp.add(it);
+            } else if (newInterval[1] < it[0]) {
+                temp.add(newInterval);
+                temp.add(it);
+                newInterval = null;
+            } else {
+                newInterval[0] = Math.min(newInterval[0], it[0]);
+                newInterval[1] = Math.max(newInterval[1], it[1]);
+            }
         }
-        while(i < intervals.length && newInterval[1] >= intervals[i][0]) {
-            newInterval[0] = Math.min(newInterval[0], intervals[i][0]);
-            newInterval[1] = Math.max(newInterval[1], intervals[i][1]);
-            i++;
+        if (newInterval != null) temp.add(newInterval);
+
+        int[][] ans = new int[temp.size()][2];
+        int k = 0;
+        while (k < temp.size()) {
+            ans[k] = new int[] { temp.get(k)[0], temp.get(k)[1] };
+            k++;
         }
-        result.add(newInterval);
-        while(i < intervals.length) {
-            result.add(intervals[i++]);
-        }
-        return result.toArray(new int[result.size()][]);
+        return ans;
     }
 }
