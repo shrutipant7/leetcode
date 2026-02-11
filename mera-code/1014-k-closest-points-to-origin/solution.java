@@ -1,42 +1,31 @@
+class Pair {
+    int x;
+    int y;
+    int dist;
 
-    class Pair implements Comparable<Pair>{
-        int x;
-        int y;
-        int dist;
-        
-        public Pair(int x, int y, int dist) {
-            this.x = x;
-            this.y = y;
-            this.dist = dist;
-        }
-            
-        public int compareTo(Pair that){
-            if(this.dist > that.dist) return 1;
-            else if(this.dist < that.dist) return -1;
-            else {
-                return this.x-that.x;
-            }
-        }
+    Pair(int x, int y, int dist) {
+        this.x = x;
+        this.y = y;
+        this.dist = dist;
     }
+}
 
 class Solution {
-    
     public int[][] kClosest(int[][] points, int k) {
-        int[][] res = new int[k][2];
-        PriorityQueue<Pair> pq = new PriorityQueue<>();
-        
-        for(int i=0; i<points.length; i++){
-            pq.add(new Pair(points[i][0], points[i][1], getDistanceFromOrigin(points[i])));
+        PriorityQueue<Pair> pq = new PriorityQueue<>((a, b) -> b.dist - a.dist);
+        for (int[] it : points) {
+            int dist = it[0] * it[0] + it[1] * it[1];
+            pq.add(new Pair(it[0], it[1], dist));
+            if (pq.size() > k)
+                pq.poll();
         }
-        
-        for(int i=0; i<k; i++){
-            Pair cur = pq.remove();
-            res[i] = new int[]{cur.x, cur.y};
+
+        int[][] ans = new int[k][2];
+        int j = 0;
+        while (!pq.isEmpty()) {
+            Pair top = pq.poll();
+            ans[j++] = new int[] { top.x, top.y };
         }
-        return res;
-    }
-    
-    static int getDistanceFromOrigin(int[] p1) {
-        return p1[0]*p1[0] + p1[1]*p1[1];
+        return ans;
     }
 }
